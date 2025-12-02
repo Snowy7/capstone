@@ -1,0 +1,37 @@
+mecanum_odometry:
+  ros__parameters:
+    # Wheel and robot geometry
+    wheel_radius: 0.0485        # meters
+    base_length: 0.26           # Lx*2 (front-to-rear)
+    base_width: 0.25            # Ly*2 (left-to-right)
+    ticks_per_rev: 2480         # post-gearbox encoder resolution
+    
+    # Encoder noise filtering
+    encoder_noise_threshold: 2  # ticks - ignore small jitter
+    
+    # Per-wheel calibration scales (adjust if wheels have different effective diameters)
+    scales: [1.0, 1.0, 1.0, 1.0]  # [FL, FR, RL, RR]
+    
+    # Frames
+    odom_frame: "odom"
+    base_frame: "base_link"
+    
+    # Publishing rate - INCREASE for smoother TF and better SLAM performance
+    publish_rate_hz: 100.0      # 100Hz for very smooth odometry (was likely 50Hz)
+    
+    # Robustness parameters
+    max_dt: 0.3                 # seconds, max integration step
+    max_wheel_speed: 5.0        # m/s physical limit
+    reject_spike_factor: 5.0    # multiplier over per-cycle limit
+    unwrap_32bit: false         # set true if MCU counters wrap uint32
+    
+    # Odometry covariances
+    # These higher values tell AMCL/SLAM that mecanum odometry has more uncertainty,
+    # especially during rotation, which causes them to rely more on laser scans
+    pose_covariance_x: 0.05      # m² - x position uncertainty (higher for mecanum drift)
+    pose_covariance_y: 0.10      # m² - y position uncertainty (higher - mecanum lateral slip)
+    pose_covariance_theta: 0.05  # rad² - rotation uncertainty (mecanum rotational drift)
+    
+    twist_covariance_x: 0.02     # (m/s)² - x velocity uncertainty
+    twist_covariance_y: 0.05     # (m/s)² - y velocity uncertainty (higher - lateral slip)
+    twist_covariance_theta: 0.02 # (rad/s)² - angular velocity uncertainty

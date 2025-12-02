@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Robot parameters -->
+  <xacro:property name="wheelbase" value="0.26"/>
+  <xacro:property name="track" value="0.25"/>
+  <xacro:property name="wheel_radius" value="0.0485"/>
+  <xacro:property name="wheel_width" value="0.03"/>
+  <xacro:property name="wheel_axis" value="0 1 0"/>
+
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <!-- Base link -->
+  <link name="base_link">
+      <visual name="base_visual">
+        <geometry>
+          <box size="${wheelbase} ${track - wheel_width} 0.06"/>
+        </geometry>
+        <origin xyz="0 0 ${(wheel_radius + 0.042)}" rpy="0 0 0"/>
+        <material name="gray">
+          <color rgba="0.5 0.5 0.5 1.0"/>
+        </material>
+      </visual>
+  </link>
+
+  <!-- Laser frame attached directly to base_link -->
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_frame"/>
+    <origin xyz="0.06 0 0.142" rpy="0 0 0"/>
+  </joint>
+
+  <link name="laser_frame">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.04"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <!-- Camera Joint -->
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${wheelbase/2 + 0.02} 0 0.05" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Camera Link -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.02 0.05 0.03"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <!-- Wheel macro -->
+  <xacro:macro name="wheel" params="name parent x y z r p yv">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <material name="black"/>
+      </visual>
+    </link>
+    <joint name="${name}_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${name}"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yv}"/>
+      <axis xyz="${wheel_axis}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Instantiate wheels -->
+  <xacro:wheel name="wheel_fl" parent="base_link" x="${wheelbase/2}" y="${track/2}" z="${wheel_radius}" r="0" p="0" yv="0"/>
+  <xacro:wheel name="wheel_fr" parent="base_link" x="${wheelbase/2}" y="${-track/2}" z="${wheel_radius}" r="0" p="0" yv="0"/>
+  <xacro:wheel name="wheel_rl" parent="base_link" x="${-wheelbase/2}" y="${track/2}" z="${wheel_radius}" r="0" p="0" yv="0"/>
+  <xacro:wheel name="wheel_rr" parent="base_link" x="${-wheelbase/2}" y="${-track/2}" z="${wheel_radius}" r="0" p="0" yv="0"/>
+
+</robot>

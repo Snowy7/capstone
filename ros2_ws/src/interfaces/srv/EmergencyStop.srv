@@ -1,0 +1,9 @@
+# Emergency stop service
+# Set enable=true to activate emergency stop (robot stops and ignores cmd_vel)
+# Set enable=false to deactivate emergency stop (robot resumes normal operation)
+
+bool enable  # true = activate e-stop, false = deactivate
+---
+bool success
+bool is_stopped  # current emergency stop state after this call
+string message

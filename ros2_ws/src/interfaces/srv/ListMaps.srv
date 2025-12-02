@@ -1,0 +1,4 @@
+---
+bool success
+string message
+string[] maps   # map base names (yaml without path)

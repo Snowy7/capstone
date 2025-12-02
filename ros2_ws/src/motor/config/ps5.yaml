@@ -1,0 +1,22 @@
+# ps5.yaml
+teleop_twist_joy:
+  ros__parameters:
+    enable_button: 4           # L1 button to enable movement
+    enable_turbo_button: 5     # R1 button for turbo
+
+    axis_linear:
+      x: 1                     # left stick vertical (forward/back)
+      y: 0                     # left stick horizontal (strafe if used)
+    scale_linear:
+      x: 0.8
+      y: 0.8
+    scale_linear_turbo:
+      x: 1.0
+      y: 1.0
+
+    axis_angular:
+      yaw: 3                     # right stick horizontal (turn)
+    scale_angular:
+      yaw: 2.0
+    scale_angular_turbo:
+      yaw: 3.0

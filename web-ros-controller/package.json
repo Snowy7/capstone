@@ -1,0 +1,13 @@
+{
+  "name": "web-ros-controller",
+  "version": "1.0.0",
+  "description": "AutoCharge Web Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "license": "Apache-2.0"
+}

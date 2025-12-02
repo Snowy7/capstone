@@ -1,0 +1,7 @@
+image: Meow3.pgm
+mode: trinary
+resolution: 0.025
+origin: [-1.267, -4.875, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

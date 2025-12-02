@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>AutoCharge – Mission Control</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body class="bg-grid">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <i class="fa-solid fa-bolt"></i> AutoCharge
+    </div>
+    <nav class="nav">
+      <a class="active" href="index.html"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="setup.html"><i class="fa-solid fa-sliders"></i> Setup & Control</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="status-pill" data-role="conn-pill">
+        <span class="dot"></span>
+        <span class="label">Disconnected</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="scrim" id="sidebarScrim"></div>
+
+  <main class="content">
+    <header class="app-header">
+      <div class="topbar">
+        <button class="burger" id="burgerToggle">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="page-title">Mission Console</div>
+        <div class="topbar-actions">
+          <span class="badge mode" id="modeBadge">Mapping</span>
+          <span class="badge status" id="nav2Status">Nav2 Stopped</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="dashboard-grid">
+      <!-- Power Status -->
+      <article class="card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-battery-half"></i> Power Systems</h2>
+        </div>
+        <div class="metric-grid">
+          <div class="metric">
+            <span class="metric-label">Battery Level</span>
+            <span class="metric-value" id="batteryLevel">--%</span>
+            <span class="metric-sub" id="batteryVoltage">-- V</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Est. Range</span>
+            <span class="metric-value" id="rangeEstimate">--</span>
+            <span class="metric-sub">Projected</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Last Heartbeat</span>
+            <span class="metric-value" id="lastUpdate">--</span>
+            <span class="metric-sub">System Time</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Map View -->
+      <article class="card map-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-map-location-dot"></i> Live Map</h2>
+          <span class="badge status" id="mapHint">Waiting for /map…</span>
+        </div>
+        <div class="map-container">
+          <canvas id="map-dashboard" class="map-canvas"></canvas>
+          <div class="map-overlay" id="mapLoading" hidden>
+            <div class="spinner"></div>
+            <span>Loading Environment…</span>
+          </div>
+          <div class="map-controls">
+            <button class="btn-icon active" id="btn-follow-robot-dash" title="Follow Robot">
+              <i class="fa-solid fa-location-crosshairs"></i>
+            </button>
+            <button class="btn-icon" id="btn-zoom-in-dash" title="Zoom In">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <button class="btn-icon" id="btn-zoom-out-dash" title="Zoom Out">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="metric-grid" style="margin-top: 1rem; grid-template-columns: repeat(3, 1fr);">
+          <div class="metric">
+            <span class="metric-label">Map Dimensions</span>
+            <span class="metric-value" id="mapSize-dash">-- × --</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Robot Position</span>
+            <span class="metric-value" id="robotPos" style="font-size: 1.1rem;">x: --, y: --</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Parking Spots</span>
+            <span class="metric-value" id="parkingSummary">--</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Camera Feed -->
+      <article class="card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-camera"></i> Visual Docking</h2>
+          <span class="badge status" id="dockingStatusBadge" hidden>DOCKING ACTIVE</span>
+        </div>
+        <div style="position: relative;">
+          <img id="cameraFeed" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            alt="Camera Feed" class="camera-feed" />
+          <div class="map-overlay" id="dockingOverlay" hidden
+            style="background: rgba(16, 185, 129, 0.2); border: 2px solid var(--accent);">
+            <span
+              style="font-weight: 700; color: var(--accent); font-size: 1.5rem; text-shadow: 0 0 10px black;">DOCKING
+              SEQUENCE</span>
+          </div>
+        </div>
+        <div class="metric-grid" style="margin-top: 1rem;">
+          <div class="metric">
+            <span class="metric-label">Tag Detected</span>
+            <span class="metric-value" id="tagDetected">NO</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Target ID</span>
+            <span class="metric-value" id="targetId">--</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Distance</span>
+            <span class="metric-value" id="tagDistance">-- m</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Parking Spots -->
+      <article class="card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-square-parking"></i> Saved Locations</h2>
+        </div>
+        <div class="list-container" id="parkingSpotsListDash">
+          <div class="empty-state">Load a map in Setup to view spots</div>
+        </div>
+      </article>
+
+      <!-- System Stats -->
+      <article class="card full-width">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-microchip"></i> System Status</h2>
+          <span class="badge status" id="throttleStatus">Normal</span>
+        </div>
+        <div class="metric-grid">
+          <div class="metric">
+            <span class="metric-label">CPU Usage</span>
+            <span class="metric-value" id="cpuUsage">--%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">RAM Usage</span>
+            <span class="metric-value" id="ramUsage">--%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Voltage</span>
+            <span class="metric-value" id="voltage">--V</span>
+          </div>
+        </div>
+        <div style="margin-top: 1rem;">
+          <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Active Nodes</h3>
+          <ul class="list-container" id="nodeList"
+            style="max-height: 150px; font-size: 0.85rem; font-family: monospace;">
+            <li class="empty-state">Waiting for data...</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Kernel Logs -->
+      <article class="card full-width">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-terminal"></i> Kernel Logs</h2>
+        </div>
+        <div class="terminal-view" id="kernelLogList">
+          <div class="empty-state">Waiting for logs...</div>
+        </div>
+      </article>
+
+      <!-- System Alerts -->
+      <article class="card full-width">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-triangle-exclamation"></i> System Logs</h2>
+        </div>
+        <div id="alertsEmpty" class="empty-state">All systems nominal.</div>
+        <ul class="alert-list" id="alertList"></ul>
+      </article>
+    </section>
+
+    <!-- Floating Emergency Button -->
+    <button id="globalEmergencyBtn" class="fab-emergency" title="EMERGENCY STOP">
+      <i class="fa-solid fa-hand"></i> STOP
+    </button>
+  </main>
+
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/roslib@1.3.0/build/roslib.min.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

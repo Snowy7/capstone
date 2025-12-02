@@ -1,0 +1,68 @@
+slam_toolbox:
+  ros__parameters:
+    # Frames and topics
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /scan
+
+    # Core mode
+    mode: mapping
+    use_map_saver: true
+    use_sim_time: false
+
+    # Publishing - High resolution for small spaces
+    transform_publish_period: 0.02  # 50Hz
+    map_update_interval: 0.5        # Update map every 0.5s (very responsive)
+    resolution: 0.025               # 2.5cm resolution (high detail for small rooms)
+    occupancy_threshold: 0.48       # Lower threshold to see walls easier (was 0.60)
+
+    # Intake - Process MORE scans for small spaces
+    throttle_scans: 1               # Process EVERY scan (don't skip)
+    minimum_time_interval: 0.0      # Process as fast as possible
+    minimum_travel_distance: 0.0    # Update on ANY movement (crucial for small spaces)
+    minimum_travel_heading: 0.0     # Update on ANY rotation
+    scan_buffer_size: 10            # Smaller buffer is fine for small map
+    scan_buffer_maximum_scan_distance: 5.0 # Limit max range to reduce noise from far objects
+    scan_queue_size: 10
+    transform_timeout: 0.2
+    tf_buffer_duration: 30.0
+    restamp_tf: true
+
+    # Loop closure - Easier to close loops in small room
+    do_loop_closing: true
+    loop_search_maximum_distance: 4.0   # Cover entire small room
+    loop_search_space_dimension: 8.0
+    loop_search_space_resolution: 0.025
+    loop_search_space_smear_deviation: 0.03
+    loop_match_minimum_chain_size: 3        # Need fewer matches to confirm loop
+    loop_match_minimum_response_coarse: 0.5 # Easier matching
+    loop_match_minimum_response_fine: 0.6
+    loop_match_maximum_variance_coarse: 2.0 # Allow more variance
+
+    # Correlation / matcher - Wide search for stability
+    correlation_search_space_dimension: 0.5   # Wide search to catch walls
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.03
+    distance_variance_penalty: 0.5          # Less penalty (allow more correction)
+    angle_variance_penalty: 0.5             # Less penalty
+    fine_search_angle_offset: 0.00349
+    coarse_search_angle_offset: 0.3         # Wider angle search
+    coarse_angle_resolution: 0.02
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true            # Enable to help find matches
+    min_pass_through: 2                     # Register walls faster (fewer hits needed)
+
+    # Solver
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: HuberLoss          # Robust to outliers
+
+    # Misc
+    debug_logging: false
+    enable_interactive_mode: true
+    stack_size_to_use: 40000000

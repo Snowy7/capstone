@@ -1,0 +1,6 @@
+string mode       # "mapping" or "navigation"
+string map_name   # optional map name or absolute path (navigation mode)
+---
+bool success
+string message
+string current_mode

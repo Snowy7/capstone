@@ -1,0 +1,5 @@
+string mode         # "mapping" or "navigation"
+string map_name     # optional: map file path (for navigation mode)
+---
+bool success
+string message

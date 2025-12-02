@@ -1,0 +1,58 @@
+amcl:
+  ros__parameters:
+    use_sim_time: false
+
+    # Frames
+    base_frame_id: base_link
+    odom_frame_id: odom
+    global_frame_id: map
+
+    # Topics
+    scan_topic: /scan
+
+    # Particle filter (KLD adaptive) - BALANCED
+    min_particles: 500
+    max_particles: 4000        # Allow more particles if needed
+    kld_err: 0.01
+    kld_z: 0.99
+    recovery_alpha_slow: 0.001
+    recovery_alpha_fast: 0.1
+
+    # Sensor update gating - RESPONSIVE
+    update_min_d: 0.10         # Update every 10cm (prevents sticking to origin)
+    update_min_a: 0.10         # Update every ~5.7 deg
+    resample_interval: 1
+
+    # Laser sensor model - PRECISE BUT ROBUST
+    laser_model_type: likelihood_field
+    laser_min_range: 0.1
+    laser_max_range: 10.0      # Use full range
+    laser_z_hit: 0.9           # Trust laser matches well
+    laser_z_rand: 0.1
+    laser_sigma_hit: 0.2       # Standard deviation (not too blurry)
+    laser_likelihood_max_dist: 4.0 # Look further for matches (fixes "near wall" issues)
+    max_beams: 100             # More beams for better wall definition
+
+    # Motion (odometry) model noise - TRUST ODOMETRY (Low noise)
+    odom_alpha1: 0.05          # Low rotation noise
+    odom_alpha2: 0.05
+    odom_alpha3: 0.05          # Low translation noise
+    odom_alpha4: 0.05
+    odom_alpha5: 0.01
+
+    # TF timing
+    transform_tolerance: 1.0
+
+    # Initial pose
+    set_initial_pose: true
+    initial_pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      yaw: 0.0
+
+# Increase timeouts to prevent startup failure under load
+lifecycle_manager_localization:
+  ros__parameters:
+    bond_timeout: 30.0
+    attempt_duration: 60.0

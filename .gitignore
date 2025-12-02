@@ -1,0 +1,54 @@
+# Node.js
+# Ignore all node_modules folders (including the website)
+node_modules/
+
+# ROS2 / Colcon build artifacts
+# Ignore build, install, and log directories wherever they appear
+build/
+install/
+log/
+build_*/
+
+# Colcon/ROS2 generated setup files
+local_setup.*
+setup.*
+colcon-*log*
+
+# CMake & build system files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build-*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+venv/
+.venv/
+
+# IDE / Editor files
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Web build outputs
+web-ros-controller/build/
+web-ros-controller/dist/
+
+# Locale/temporary markdown and other generated files
+*.bak
+*.swp
+
